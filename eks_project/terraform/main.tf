@@ -37,14 +37,3 @@ resource "aws_eks_node_group" "eks_nodes" {
 }
 
 
-data "aws_vpc" "default" {
-  default = true
-}
-
-data "aws_subnets" "default_subnets" {
-  filter {
-    name   = "vpc-id"
-    values = [data.aws_vpc.default.id]
-  }
-}
-
