@@ -1,5 +1,6 @@
 name: Docker Build & Push
 
+
 on:
   push:
     branches:
@@ -24,6 +25,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build Docker image and push to DockerHub
+        working-directory: eks_project/docker
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/nginx-custom:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/nginx-custom:latest
