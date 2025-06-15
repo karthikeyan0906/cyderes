@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: karthikeyan0906/nginx-custom
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+
