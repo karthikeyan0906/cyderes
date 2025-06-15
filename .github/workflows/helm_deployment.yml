@@ -1,0 +1,36 @@
+name: Deploy with Helm
+
+on:
+  workflow_dispatch:  # allows manual triggering from the GitHub UI
+
+jobs:
+  helm-release:
+    name: Helm Deployment to EKS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Update kubeconfig for EKS Cluster
+        run: |
+          aws eks update-kubeconfig \
+            --name ${{ secrets.EKS_CLUSTER_NAME }} \
+            --region ${{ secrets.AWS_REGION }}
+
+      - name: Install Helm CLI
+        uses: azure/setup-helm@v3
+
+      - name: Deploy Helm Chart
+        run: |
+          helm upgrade --install nginx-app ./nginx-helm-chart \
+            --namespace default --create-namespace \
+            --set image.repository=${{ secrets.DOCKER_USERNAME }}/nginx-custom \
+            --set image.tag=latest

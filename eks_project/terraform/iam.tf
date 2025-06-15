@@ -39,9 +39,32 @@ resource "aws_iam_role_policy_attachment" "eks_node_policies" {
   for_each = toset([ // passing the policy as sets to have unqique values
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
     "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
-    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" //sandbox bootstapping failed without this permission  
   ])
 
   role       = aws_iam_role.eks_node_role.name
   policy_arn = each.key
+}
+
+
+provider "kubernetes" {
+  config_path = "~/.kube/config"  # Or use dynamic EKS config
+}
+
+resource "kubernetes_config_map" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    mapUsers = yamlencode([
+      {
+        userarn  = aws_iam_user.githubaction.arn
+        username = "githubaction"
+        groups   = ["system:masters"]
+      }
+    ])
+  }
 }
