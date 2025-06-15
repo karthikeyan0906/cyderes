@@ -54,11 +54,20 @@ resource "kubernetes_cluster_role" "helm_deployer" {
     name = "helm-deployer"
   }
 
-  rule {
-    api_groups = ["", "apps", "batch"]
-    resources  = ["deployments", "replicasets", "pods", "services", "jobs"]
-    verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
-  }
+# Core resources (including secrets)
+rule {
+  api_groups = [""]
+  resources  = ["pods", "services", "secrets"]
+  verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
+}
+
+# apps and batch workloads
+rule {
+  api_groups = ["apps", "batch"]
+  resources  = ["deployments", "replicasets", "jobs"]
+  verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
+}
+
 }
 
 resource "kubernetes_cluster_role_binding" "helm_deployer_binding" {
