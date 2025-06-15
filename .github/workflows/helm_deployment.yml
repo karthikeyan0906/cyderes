@@ -36,7 +36,7 @@ jobs:
 
       - name: Deploy Helm Chart
         run: |
-          helm upgrade --install nginx-app ./eks_project/helm/chart \
+          helm upgrade --install nginx-app ./eks_project/helm \
             --namespace default --create-namespace \
             --set image.repository=${{ secrets.DOCKER_USERNAME }}/nginx-custom \
             --set image.tag=latest
