@@ -12,3 +12,11 @@ provider "aws" {
   region  = "ap-south-1" // using mumbai for my free tier AWS account 
 }
 
+provider "github" {
+  token = var.github_token  #pass this as env variable with TF_VAR_github_token as prefix
+  owner = var.github_username #pass this as env variable with appropriate prefix
+}
+
+provider "kubernetes" {
+  config_path = "~/.kube/config"  # Or use dynamic EKS config
+}

@@ -36,6 +36,3 @@ resource "aws_eks_node_group" "eks_nodes" {
   depends_on = [aws_eks_cluster.eks]
 }
 
-provider "kubernetes" {
-  config_path    = "~/.kube/config"
-}

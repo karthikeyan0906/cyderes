@@ -26,11 +26,6 @@ resource "aws_iam_access_key" "githubaction" {
   user = aws_iam_user.githubaction.name
 }
 
-provider "github" {
-  token = var.github_token  #pass this as env variable with TF_VAR_github_token as prefix
-  owner = var.github_username #pass this as env variable with appropriate prefix
-}
-
 variable "github_token" {
   description = "GitHub token for authentication"
   type        = string
