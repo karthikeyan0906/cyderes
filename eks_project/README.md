@@ -36,7 +36,7 @@ IAM role issues in cluster : cluster couldnt connect with nodegroups as sandbox 
 
 After adding the ECR permissions it was fixed and i replaced the node group instances via terraform so new instance sandbox services are started properly as they run only on first boot 
 
-Helm Chart Service Confusion: Debugged and fixed service.yaml to align with correct values.yaml. 
+Helm Chart Service Confusion: Debugged and fixed service.yaml to align with correct values.yaml. and helm space issues was faced and fixed by adding commands in single line instead of backslash / 
 
 Githubaction issues :
 
