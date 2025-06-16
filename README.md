@@ -2,7 +2,6 @@
 
 export your github credentials locally these will be used by terraform to push secrets into your repository:
 
-
 export GITHUB_USERNAME=your-github-username
 export GITHUB_TOKEN=your-personal-access-token
 
@@ -19,9 +18,13 @@ an iam user for github actions with programmatic access
 github repo secrets (aws access and secret keys) using the github provider
 
 **Commands :**
+
 setup aws cli acccess , terraform 
+
 terraform init
+
 terraform apply
+
 configure your local environment
 
 set up your kubeconfig:
