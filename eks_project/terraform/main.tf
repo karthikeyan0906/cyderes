@@ -15,7 +15,7 @@ resource "aws_eks_cluster" "eks" {
   version = "1.29" // latest stable k8 version
 
  vpc_config {
-    subnet_ids = data.aws_subnets.default_subnets.ids  # Use existing subnets
+    subnet_ids = data.aws_subnets.default_subnets.ids  // Use existing public subnets part of default vpc 
   }
 
   depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
@@ -33,6 +33,6 @@ resource "aws_eks_node_group" "eks_nodes" {
     max_size     = 3
   }
 
-  depends_on = [aws_eks_cluster.eks]
+  depends_on = [aws_eks_cluster.eks] // implicit dependency to create cluster first before nodegrup
 }
 

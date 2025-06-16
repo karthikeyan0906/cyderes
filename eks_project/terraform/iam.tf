@@ -8,7 +8,7 @@ resource "aws_iam_role" "eks_cluster_role" {
       Principal = {
         Service = "eks.amazonaws.com"
       }
-      Action = "sts:AssumeRole"
+      Action = "sts:AssumeRole" // assume cluster role that we have defined
     }]
   })
 }
@@ -21,7 +21,7 @@ resource "aws_iam_role" "eks_node_role" {
     Statement = [{
       Effect = "Allow"
       Principal = {
-        Service = "ec2.amazonaws.com"
+        Service = "ec2.amazonaws.com" // assume node role that we have defined
       }
       Action = "sts:AssumeRole"
     }]
@@ -38,7 +38,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
 resource "aws_iam_role_policy_attachment" "eks_node_policies" {
   for_each = toset([ // passing the policy as sets to have unqique values
     "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy",
-    "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy",
+    "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy", // CNI policy to create ENI on nodes
     "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
     "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly" //sandbox bootstapping failed without this permission  
   ])
@@ -54,16 +54,15 @@ resource "kubernetes_cluster_role" "helm_deployer" {
     name = "helm-deployer"
   }
 
-# Core resources (including secrets)
+// permissions associating to delpoyers group , without this helm deployment will fail
 rule {
   api_groups = [""]
   resources  = ["pods", "services", "secrets"]
   verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
 }
 
-# apps and batch workloads
 rule {
-  api_groups = ["apps", "batch"]
+  api_groups = ["apps", "batch"] 
   resources  = ["deployments", "replicasets", "jobs"]
   verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
 }
@@ -87,3 +86,4 @@ resource "kubernetes_cluster_role_binding" "helm_deployer_binding" {
     api_group = "rbac.authorization.k8s.io"
   }
 }
+
