@@ -27,9 +27,7 @@ jobs:
 
       - name: Update kubeconfig for EKS Cluster # updates kube config from runner using aws keys/
         run: |
-          aws eks update-kubeconfig \ 
-            --name ${{ github.event.inputs.cluster_name }} \
-            --region ${{ github.event.inputs.region }} 
+          aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region ${{ github.event.inputs.region }}
 
       - name: Install Helm CLI
         uses: azure/setup-helm@v3
