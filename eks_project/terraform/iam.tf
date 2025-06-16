@@ -87,3 +87,33 @@ resource "kubernetes_cluster_role_binding" "helm_deployer_binding" {
   }
 }
 
+resource "kubernetes_config_map" "aws_auth" {
+  metadata {
+    name      = "aws-auth"
+    namespace = "kube-system"
+  }
+
+  data = {
+    mapRoles = yamlencode([
+      {
+        rolearn  = aws_iam_role.eks_node_role.arn
+        username = "system:node:{{EC2PrivateDNSName}}"
+        groups   = [
+          "system:bootstrappers",
+          "system:nodes"
+        ]
+      },
+      {
+        rolearn  = aws_iam_user.githubaction.arn 
+        username = "githubaction"
+        groups   = ["deployers"]
+      }
+    ])
+  }
+
+  depends_on = [
+    aws_eks_cluster.eks,
+    aws_eks_node_group.eks_nodes
+    
+  ]
+}
