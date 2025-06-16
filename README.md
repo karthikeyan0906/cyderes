@@ -1,11 +1,12 @@
-**How to use project eks_project**
+**1) How to use project eks_project**
 
-export your github credentials locally these will be used by terraform to push secrets into your repository:
+export your github credentials locally ,
+these will be used by terraform to push secrets into your repository:
 
 export GITHUB_USERNAME=your-github-username
 export GITHUB_TOKEN=your-personal-access-token
 
-**initialize and apply the terraform config**
+**2) initialize and apply the terraform config**
 
 this will create:
 
@@ -40,11 +41,12 @@ this step allows the github action's iam user to access the cluster:
 kubectl edit configmap aws-auth -n kube-system
 add a new mapUsers entry with the iam arn created by terraform and assign it a username and group like system:masters.
 
-**verify your repo secrets are set correctly**
+**3) verify your repo secrets are set correctly**
 
-confirm that your dockerhub creds (DOCKER_USERNAME and DOCKER_PASSWORD) and terraform-set aws creds (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY) are present in the github repo’s secrets.
+confirm that your dockerhub creds (DOCKER_USERNAME and DOCKER_PASSWORD) and 
+terraform-set aws creds (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY) are present in the github repo’s secrets.
 
-**build and push the docker image**
+**4) build and push the docker image**
 
 this happens automatically when you push code to the main or initial branch. github actions will:
 
@@ -52,7 +54,7 @@ build the custom nginx docker image
 
 push it to dockerhub
 
-**deploy to eks using helm**
+**5) deploy to eks using helm**
 
 trigger the deploy workflow manually from the github actions tab and provide the following inputs:
 
