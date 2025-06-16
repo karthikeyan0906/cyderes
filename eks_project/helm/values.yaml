@@ -1,11 +1,11 @@
-replicaCount: 1
+replicaCount: 2
 
 image:
   repository: karthikeyan0906/nginx-custom
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: IfNotPresent # check local cache before pulling from public
 
 service:
-  type: NodePort
+  type: LoadBalancer
   port: 80
 

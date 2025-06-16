@@ -18,5 +18,5 @@ provider "github" {
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"  # Or use dynamic EKS config
+  config_path = "~/.kube/config"  #kube config from default location is picked for provider
 }
