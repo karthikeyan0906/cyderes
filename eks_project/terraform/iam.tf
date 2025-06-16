@@ -47,24 +47,43 @@ resource "aws_iam_role_policy_attachment" "eks_node_policies" {
   policy_arn = each.key
 }
 
+//cluster role creation for githubaction user for helm deployment
 
-provider "kubernetes" {
-  config_path = "~/.kube/config"  # Or use dynamic EKS config
-}
-
-resource "kubernetes_config_map" "aws_auth" {
+resource "kubernetes_cluster_role" "helm_deployer" {
   metadata {
-    name      = "aws-auth"
-    namespace = "kube-system"
+    name = "helm-deployer"
   }
 
-  data = {
-    mapUsers = yamlencode([
-      {
-        userarn  = aws_iam_user.githubaction.arn
-        username = "githubaction"
-        groups   = ["system:masters"]
-      }
-    ])
+# Core resources (including secrets)
+rule {
+  api_groups = [""]
+  resources  = ["pods", "services", "secrets"]
+  verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
+}
+
+# apps and batch workloads
+rule {
+  api_groups = ["apps", "batch"]
+  resources  = ["deployments", "replicasets", "jobs"]
+  verbs      = ["get", "list", "watch", "create", "update", "patch", "delete"]
+}
+
+}
+
+resource "kubernetes_cluster_role_binding" "helm_deployer_binding" {
+  metadata {
+    name = "helm-deployer-binding"
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = kubernetes_cluster_role.helm_deployer.metadata[0].name
+  }
+
+  subject {
+    kind      = "Group"
+    name      = "deployers"  // update this group in aws-auth for github action user
+    api_group = "rbac.authorization.k8s.io"
   }
 }
