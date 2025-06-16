@@ -1,10 +1,10 @@
 # EKS Infrastructure Deployment & CI/CD Pipeline
 
-1. Project Overview
+**1. Project Overview**
 
 This repository demonstrates EKS infrastructure deployment using Terraform, Docker image build and push via GitHub Actions, and automated Helm-based application delivery to Kubernetes.
 
-2. Infrastructure 
+**2. Infrastructure**
 
 Terraform used to provision EKS cluster version 1.29, node groups with attached policies ( EKS ,ECR,SSM,) IAM roles ,github action secrets, k8 cluster role for github action
 
@@ -12,7 +12,7 @@ terraform apply triggered from local environment.
 
 kubernetes access configured with aws eks update-kubeconfig.
 
-3. CI/CD Pipeline
+**3. CI/CD Pipeline**
 
 GitHub Actions handles:
 
@@ -26,7 +26,7 @@ Secrets like docker and aws creds are stored securely in repo settings.
 
 Application exposed via service type as loadbalancer
 
-4. Challenges 
+**4. Challenges**
 
 NodePort SG Issues: Initially i used nodeport and manually allowed the port in node SG but that gave additional code to write tf codebase hence Resolved by switching to LoadBalancer service type.
 
@@ -46,7 +46,7 @@ Terraform issues : syntax issues was fixed by terraform validate , indenation is
 
 Local issues : since i used git bash on windows, i had lots of issues in confguring aws,kubectl,terraform which was fixed by updating the file path in bash_prompt and souring it 
 
-5. other solutions i woud have added if i got more time 
+5. **other solutions** -  i woud have added if i got more time 
 
 TLS setup via cert-manager
 
